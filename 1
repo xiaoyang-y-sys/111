@@ -342,11 +342,11 @@
       id: 1,
       name: "Ap小白云 fs",
       price: 2000,
-      cover: "https://picsum.photos/seed/apxiaobaiyun/800/600.jpg",
+      cover: "小白云粉色.jpg",
       images: [
-        "https://picsum.photos/seed/apxiaobaiyun1/800/600.jpg",
-        "https://picsum.photos/seed/apxiaobaiyun2/800/600.jpg",
-        "https://picsum.photos/seed/apxiaobaiyun3/800/600.jpg"
+        "小白云粉色.jpg",
+        "小白云蓝色.jpg",
+        "小白云粉色.jpg"
       ],
       desc: "经典的蓝天白云柄图，搭配精致蕾丝，是Lolita爱好者的必入款。"
     },
@@ -354,23 +354,23 @@
       id: 2,
       name: "天国少女2.0 春丽",
       price: 5380,
-      cover: "https://picsum.photos/seed/tianguoshaonver/800/600.jpg",
+      cover: "天国少女粉.jpg",
       images: [
-        "https://picsum.photos/seed/tianguoshaonver1/800/600.jpg",
-        "https://picsum.photos/seed/tianguoshaonver2/800/600.jpg",
-        "https://picsum.photos/seed/tianguoshaonver3/800/600.jpg"
+        "天国少女粉.jpg",
+        "天国少女蓝.jpg",
+        "天国少女粉.jpg"
       ],
       desc: "华丽的多层裙摆与精致刺绣，尽显优雅气质，是天国少女系列的升级之作。"
     },
     {
       id: 3,
-      name: "AP baby room",
+      name: "ap baby room",
       price: 2980,
-      cover: "https://picsum.photos/seed/apbabyroom/800/600.jpg",
+      cover: "ap babyrooom粉色.jpg",
       images: [
-        "https://picsum.photos/seed/apbabyroom1/800/600.jpg",
-        "https://picsum.photos/seed/apbabyroom2/800/600.jpg",
-        "https://picsum.photos/seed/apbabyroom3/800/600.jpg"
+        "ap babyrooom粉色.jpg",
+        "babyroom蓝.jpg"
+
       ],
       desc: "可爱的婴儿房主题柄图，柔和的色彩搭配，充满童真与梦幻感。"
     },
@@ -378,11 +378,11 @@
       id: 4,
       name: "AP草莓21",
       price: 1600,
-      cover: "https://picsum.photos/seed/apcaomei21/800/600.jpg",
+      cover: "草莓21白.jpg",
       images: [
-        "https://picsum.photos/seed/apcaomei211/800/600.jpg",
-        "https://picsum.photos/seed/apcaomei212/800/600.jpg",
-        "https://picsum.photos/seed/apcaomei213/800/600.jpg"
+        "草莓21白.jpg",
+        "草莓21粉.jpg"
+
       ],
       desc: "鲜艳的草莓印花，搭配红色蝴蝶结，充满夏日的清新与甜美。"
     },
@@ -390,11 +390,11 @@
       id: 5,
       name: "cute heart",
       price: 2300,
-      cover: "https://picsum.photos/seed/cuteheart/800/600.jpg",
+      cover: "cuteheart.jpg",
       images: [
-        "https://picsum.photos/seed/cuteheart1/800/600.jpg",
-        "https://picsum.photos/seed/cuteheart2/800/600.jpg",
-        "https://picsum.photos/seed/cuteheart3/800/600.jpg"
+        "cuteheart.jpg",
+        "cute heart (2).jpg"
+
       ],
       desc: "粉色系的甜美设计，多层荷叶边裙摆，尽显少女心。"
     },
@@ -402,15 +402,107 @@
       id: 6,
       name: "梦马jsk",
       price: 2618,
-      cover: "https://picsum.photos/seed/mengmajsk/800/600.jpg",
+      cover: "梦马粉色.jpg",
       images: [
-        "https://picsum.photos/seed/mengmajsk1/800/600.jpg",
-        "https://picsum.photos/seed/mengmajsk2/800/600.jpg",
-        "https://picsum.photos/seed/mengmajsk3/800/600.jpg"
+        "梦马粉色.jpg",
+        "梦马蓝色.jpg"
+
       ],
       desc: "梦幻的独角兽柄图，淡紫色的裙摆，充满童话般的浪漫气息。"
     }
   ];
+
+    // 渲染商品列表
+    function renderProductList() {
+      const productList = document.getElementById('productList');
+      productList.innerHTML = products.map(product => `
+        <div class="product-card" data-id="${product.id}">
+          <img src="${product.cover}" alt="${product.name}">
+          <div class="product-info">
+            <div class="product-name">${product.name}</div>
+            <div class="product-price">¥ ${product.price}.00</div>
+          </div>
+        </div>
+      `).join('');
+
+      // 绑定点击事件
+      document.querySelectorAll('.product-card').forEach(card => {
+        card.addEventListener('click', () => {
+          const productId = parseInt(card.dataset.id);
+          openDetailModal(productId);
+        });
+      });
+    }
+
+    // 打开详情页
+    function openDetailModal(productId) {
+      const product = products.find(p => p.id === productId);
+      if (!product) return;
+
+      const detailContent = document.getElementById('detailContent');
+      detailContent.innerHTML = `
+        <div class="carousel" id="detail-carousel">
+          <div class="carousel-images">
+            ${product.images.map((img, index) => `
+              <div class="carousel-item ${index === 0 ? 'active' : ''}">
+                <img src="${img}" alt="${product.name} ${index + 1}">
+              </div>
+            `).join('')}
+          </div>
+          <button class="carousel-btn prev">&lt;</button>
+          <button class="carousel-btn next">&gt;</button>
+          <div class="carousel-indicators">
+            ${product.images.map((_, index) => `
+              <span class="indicator ${index === 0 ? 'active' : ''}" data-index="${index}"></span>
+            `).join('')}
+          </div>
+        </div>
+        <div class="detail-info">
+          <h1 class="detail-title">${product.name}</h1>
+          <div class="detail-price">¥ ${product.price}.00</div>
+          <div class="detail-desc">${product.desc}</div>
+          <div class="size-select">
+            <span class="size-label">尺码：</span>
+            <div class="size-options">
+              <button class="size-option" data-size="S">S</button>
+              <button class="size-option" data-size="M">M</button>
+              <button class="size-option" data-size="L">L</button>
+              <button class="size-option" data-size="XL">XL</button>
+            </div>
+          </div>
+          <div class="action-buttons">
+            <button class="buy-btn" id="buyBtn">立即购买</button>
+            <button class="cart-btn" id="cartBtn">加入购物车</button>
+          </div>
+        </div>
+      `;
+
+      // 初始化轮播图（含自动播放）
+      initCarousel();
+
+      // 尺码选择
+      document.querySelectorAll('.size-option').forEach(option => {
+        option.addEventListener('click', () => {
+          document.querySelectorAll('.size-option').forEach(o => o.classList.remove('active'));
+          option.classList.add('active');
+        });
+      });
+
+      // 购买按钮
+      document.getElementById('buyBtn').addEventListener('click', () => {
+        const selectedSize = document.querySelector('.size-option.active')?.dataset.size || '未选择';
+        alert(`您选择了【${product.name}】，尺码：${selectedSize}，即将前往结算页面。`);
+      });
+
+      // 加入购物车
+      document.getElementById('cartBtn').addEventListener('click', () => {
+        const selectedSize = document.querySelector('.size-option.active')?.dataset.size || '未选择';
+        alert(`【${product.name}】（尺码：${selectedSize}）已成功加入购物车！`);
+      });
+
+      // 显示详情页
+      document.getElementById('detailOverlay').classList.add('active');
+    }
 
 </script>
 </body>
