@@ -504,6 +504,99 @@
       document.getElementById('detailOverlay').classList.add('active');
     }
 
+ // 初始化轮播图（含自动播放）
+    function initCarousel() {
+      const carousel = document.getElementById('detail-carousel');
+      const carouselImages = carousel.querySelector('.carousel-images');
+      const items = carousel.querySelectorAll('.carousel-item');
+      const indicators = carousel.querySelectorAll('.indicator');
+      const prevBtn = carousel.querySelector('.carousel-btn.prev');
+      const nextBtn = carousel.querySelector('.carousel-btn.next');
+
+      let currentIndex = 0;
+      const totalItems = items.length;
+      let autoPlayTimer;
+      const autoPlayDelay = 3000; // 3秒自动切换
+
+      function updateCarousel() {
+        carouselImages.style.transform = `translateX(-${currentIndex * 100}%)`;
+        indicators.forEach((ind, i) => {
+          ind.classList.toggle('active', i === currentIndex);
+        });
+      }
+
+      function nextSlide() {
+        currentIndex = (currentIndex + 1) % totalItems;
+        updateCarousel();
+      }
+
+      function prevSlide() {
+        currentIndex = (currentIndex - 1 + totalItems) % totalItems;
+        updateCarousel();
+      }
+
+      function startAutoPlay() {
+        if (autoPlayTimer) clearInterval(autoPlayTimer);
+        autoPlayTimer = setInterval(nextSlide, autoPlayDelay);
+      }
+
+      function stopAutoPlay() {
+        clearInterval(autoPlayTimer);
+      }
+
+      prevBtn.addEventListener('click', () => {
+        stopAutoPlay();
+        prevSlide();
+        startAutoPlay();
+      });
+
+      nextBtn.addEventListener('click', () => {
+        stopAutoPlay();
+        nextSlide();
+        startAutoPlay();
+      });
+
+      indicators.forEach((ind, i) => {
+        ind.addEventListener('click', () => {
+          stopAutoPlay();
+          currentIndex = i;
+          updateCarousel();
+          startAutoPlay();
+        });
+      });
+
+      carousel.addEventListener('mouse enter', stopAutoPlay);
+      carousel.addEventListener('mouse leave', startAutoPlay);
+
+      let startX = 0;
+      let endX = 0;
+      carouselImages.addEventListener('touch start', (e) => {
+        startX = e.touches[0].clientX;
+      });
+      carouselImages.addEventListener('touched', (e) => {
+        endX = e.changedTouches[0].clientX;
+        if (startX - endX > 50) {
+          stopAutoPlay();
+          nextSlide();
+          startAutoPlay();
+        } else if (endX - startX > 50) {
+          stopAutoPlay();
+          prevSlide();
+          startAutoPlay();
+        }
+      });
+
+      startAutoPlay();
+    }
+
+    // 关闭详情页
+    document.getElementById('closeBtn').addEventListener('click', () => {
+      document.getElementById('detailOverlay').classList.remove('active');
+    });
+
+    // 初始化页面
+    renderProductList();
+
 </script>
 </body>
 </html>
